@@ -23,14 +23,13 @@ public class TestSQLMain {
 
 			while (rs.next()) {
 				String tenSP = rs.getString("tenSP");
-				System.out.println(tenSP);
+				System.out.print(tenSP + " - ");
+				System.out.println(rs.getString("GiaBan"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			ConnectionUtil.close(rs);
-			ConnectionUtil.close(stmt);
-			ConnectionUtil.close(conn);
+			ConnectionUtil.close(rs, stmt, conn);
 		}
 	}
 
@@ -38,7 +37,7 @@ public class TestSQLMain {
 		Connection conn = ConnectionUtil.getConnection();
 		Statement stmt = null;
 
-		String sql = "INSERT INTO Sanpham VALUES ('SP07', 'Mũ Bảo hiểm', 'Type002', '147000')";
+		String sql = "INSERT INTO Sanpham VALUES ('SP08', 'Quần đỏ', 'Type002', '147000')";
 
 		try {
 			stmt = conn.createStatement();
@@ -48,8 +47,7 @@ public class TestSQLMain {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			ConnectionUtil.close(stmt);
-			ConnectionUtil.close(conn);
+			ConnectionUtil.close(stmt, conn);
 		}
 	}
 
@@ -69,39 +67,56 @@ public class TestSQLMain {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			ConnectionUtil.close(pst);
-			ConnectionUtil.close(conn);
+			ConnectionUtil.close(pst, conn);
+		}
+	}
+
+	public static void deleteData() {
+		Connection conn = ConnectionUtil.getConnection();
+		PreparedStatement pst = null;
+
+		String sql = "DELETE FROM Sanpham WHERE MaSP = ?";
+
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, "SP08");
+			int results = pst.executeUpdate();
+
+			System.out.println(results);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionUtil.close(pst, conn);
 		}
 	}
 
 	public static void main(String[] args) {
-		showData();
 //		insertData();
 //		updateData();
-//		updatable();
+		updatable();
+		showData();
+//		deleteData();
 
 	}
 
 	public static void updatable() {
 		Connection conn = ConnectionUtil.getConnection();
-		// Creating a Statement object
 		Statement stmt = null;
+		ResultSet rs = null;
 		try {
-			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			// Retrieving the data
-			ResultSet rs = stmt.executeQuery("select * from Sanpham");
-			// Printing the contents of the table
-			System.out.println("Contents of the table: ");
-			rs.beforeFirst();
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			rs = stmt.executeQuery("select * from Sanpham");
 			while (rs.next()) {
-				System.out.print("MaSP: " + rs.getString("MaSP"));
-				System.out.print(", TenSP: " + rs.getString("TenSP"));
-				System.out.print(", MaLoaiSP: " + rs.getString("MaLoaiSP"));
-				System.out.println(", GiaBan: " + rs.getString("GiaBan"));
+				String MaLoaiSP = rs.getString("MaLoaiSP");
+				if ("Type001".equals(MaLoaiSP)) {
+					rs.updateString("GiaBan", "100");
+					rs.updateRow();
+				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			ConnectionUtil.close(rs, stmt, conn);
 		}
 	}
 

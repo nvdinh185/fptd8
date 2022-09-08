@@ -22,8 +22,8 @@ public class TestCommitConn {
 	public static void testCommitData() {
 
 		String sqlUpdate = "UPDATE Sanpham SET TenSP = ? WHERE MaSP = ?";
-		String sqlInsert = "INSERT INTO Sanpham VALUES ('SP09', 'Mũ', 'Type002', '147000')";
 		String sqlDelete = "DELETE FROM Sanpham WHERE MaSP = 'SP06'";
+		String sqlInsert = "INSERT INTO Sanpham VALUES ('SP06', 'Mũ', 'Type002', '147000')";
 
 		try {
 			conn = ConnectionUtil.getConnection();
@@ -32,8 +32,12 @@ public class TestCommitConn {
 			// update
 			pst = conn.prepareStatement(sqlUpdate);
 			pst.setString(1, "Áo ba lỗ");
-			pst.setString(2, "SP06");
+			pst.setString(2, "SP07");
 			pst.executeUpdate();
+
+			// delete
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sqlDelete);
 
 			// insert
 			stmt = conn.createStatement();

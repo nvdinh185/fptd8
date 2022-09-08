@@ -56,7 +56,7 @@ public class ConnectionUtil {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				System.out.println("Close prepare statement failure!");
+				System.out.println("Close statement failure!");
 				e.printStackTrace();
 			}
 		}
@@ -101,20 +101,8 @@ public class ConnectionUtil {
 	 * @param connect
 	 */
 	public static void close(Statement stmt, Connection connect) {
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (connect != null) {
-			try {
-				connect.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		close(stmt);
+		close(connect);
 	}
 
 	/**
@@ -125,27 +113,9 @@ public class ConnectionUtil {
 	 * @param connect
 	 */
 	public static void close(Statement stmt, PreparedStatement prStmt, Connection connect) {
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (prStmt != null) {
-			try {
-				prStmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (connect != null) {
-			try {
-				connect.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		close(stmt);
+		close(prStmt);
+		close(connect);
 	}
 
 	/**
@@ -156,27 +126,9 @@ public class ConnectionUtil {
 	 * @param connect
 	 */
 	public static void close(ResultSet rs, Statement stmt, Connection connect) {
-		if (rs != null) {
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (connect != null) {
-			try {
-				connect.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		close(rs);
+		close(stmt);
+		close(connect);
 	}
 
 }
